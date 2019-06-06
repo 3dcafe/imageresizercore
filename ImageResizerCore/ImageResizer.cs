@@ -10,7 +10,7 @@ namespace ImageResizerCore
     
     public static class ImageResizer
     {
-        public static IApplicationBuilder UseMyMiddleware(this IApplicationBuilder builder)
+        public static IApplicationBuilder UseImageResizerMiddleware(this IApplicationBuilder builder)
         {
             return builder.UseMiddleware<ImageResizerMiddleware>();
         }
@@ -44,7 +44,12 @@ namespace ImageResizerCore
             var fileInfo = provider.GetFileInfo(httpContext.Request.Path);
             if (fileInfo.Exists)
             {
-                //  File f = File.
+                var ex = System.IO.Path.GetExtension(fileInfo.PhysicalPath);
+                var mineType = Utils.ExMineType.GetMimeType(ex);
+                if(Utils.ExMineType.IsImageHasBenResize(mineType))
+                {
+                    string str = "";
+                }
             }
 
             //httpContext.Response.StatusCode = 500;
