@@ -8,7 +8,6 @@ using ImageResizerCore.Utils;
 
 namespace ImageResizerCore
 {
-    
     public static class ImageResizer
     {
         public static IApplicationBuilder UseImageResizerMiddleware(this IApplicationBuilder builder)
@@ -16,28 +15,18 @@ namespace ImageResizerCore
             return builder.UseMiddleware<ImageResizerMiddleware>();
         }
     }
-
     public class ImageResizerMiddleware
     {
         const string folder = "cache";
         private readonly RequestDelegate _next;
-        // private readonly ILogger _logger;
-
         public ImageResizerMiddleware(RequestDelegate next)
         {
             _next = next;
-            string st = "";
-            // _logger = logFactory.CreateLogger("MyMiddleware");
         }
-
         public async Task Invoke(HttpContext httpContext)
         {
-            // _logger.LogInformation("MyMiddleware executing..");
-
             var _params = httpContext.Request.Query;
-
             var provider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"));
-
             var fileInfo = provider.GetFileInfo(httpContext.Request.Path);
             if (fileInfo.Exists)
             {
