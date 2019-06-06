@@ -32,7 +32,8 @@ namespace ImageResizerCore
         {
             // _logger.LogInformation("MyMiddleware executing..");
 
-
+            var _params = httpContext.Request.Query;
+            string str = "";
             /*
             app.UseStaticFiles(new StaticFileOptions
             {
@@ -48,7 +49,16 @@ namespace ImageResizerCore
                 var mineType = Utils.ExMineType.GetMimeType(ex);
                 if(Utils.ExMineType.IsImageHasBenResize(mineType))
                 {
-                    string str = "";
+                    httpContext.Response.ContentType = "image/jpeg";
+                    string p = @"C:\Users\gs3d\Source\Repos\openkey\OpenKey\wwwroot\2.jpg";
+                    byte[] imgdata = System.IO.File.ReadAllBytes(p);
+                    httpContext.Response.Body.Write(imgdata, 0, imgdata.Length);
+
+                    //await httpContext.Response.Body.WriteByte(imgdata,0, imgdata.Length);
+                    // await httpContext.Response.WriteAsync(Buffer,0,
+                    //await httpContext.Response.WriteAsync("Invalid User Key");
+                    //httpContext.Response.Redirect("/1.jpg");
+                    return;
                 }
             }
 
@@ -60,7 +70,6 @@ namespace ImageResizerCore
             //return;
 
             await _next(httpContext); // calling next middleware
-
         }
     }
 }
