@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Text;
 
 namespace ImageResizerCore.Utils
@@ -8,8 +10,6 @@ namespace ImageResizerCore.Utils
     {
         public static Image Resize(this Image current, int maxWidth, int maxHeight)
         {
-            return null;
-            /*
             int width, height;
             #region reckon size 
             if (current.Width > current.Height)
@@ -37,7 +37,6 @@ namespace ImageResizerCore.Utils
 
             return canvas;
             #endregion
-            */
         }
     }
 }

@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.FileProviders;
-using System;
+﻿using System.Drawing;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.FileProviders;
+using ImageResizerCore.Utils;
 
 namespace ImageResizerCore
 {
@@ -18,6 +19,7 @@ namespace ImageResizerCore
 
     public class ImageResizerMiddleware
     {
+        const string folder = "cache";
         private readonly RequestDelegate _next;
         // private readonly ILogger _logger;
 
@@ -33,12 +35,6 @@ namespace ImageResizerCore
             // _logger.LogInformation("MyMiddleware executing..");
 
             var _params = httpContext.Request.Query;
-            string str = "";
-            /*
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"))
-            });*/
 
             var provider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"));
 
@@ -50,26 +46,37 @@ namespace ImageResizerCore
                 if(Utils.ExMineType.IsImageHasBenResize(mineType))
                 {
                     httpContext.Response.ContentType = "image/jpeg";
-                    string p = @"C:\Users\gs3d\Source\Repos\openkey\OpenKey\wwwroot\2.jpg";
-                    byte[] imgdata = System.IO.File.ReadAllBytes(p);
-                    httpContext.Response.Body.Write(imgdata, 0, imgdata.Length);
+#warning review code
+                    string _workFolder = string.Format("{0}\\wwwroot\\{1}", Directory.GetCurrentDirectory(), folder);
 
-                    //await httpContext.Response.Body.WriteByte(imgdata,0, imgdata.Length);
-                    // await httpContext.Response.WriteAsync(Buffer,0,
-                    //await httpContext.Response.WriteAsync("Invalid User Key");
-                    //httpContext.Response.Redirect("/1.jpg");
-                    return;
+                    if (Directory.Exists(_workFolder)) {
+                        Directory.CreateDirectory(_workFolder);
+                    }
+#warning validate params request
+                    if(_params.Count>0) {
+#warning check on exist or return
+                        string fileName = System.IO.Path.GetFileName(fileInfo.PhysicalPath).Replace(ex, string.Empty);
+                        string p_ave = string.Format(
+                            "{0}\\{1}_{3}_{4}{2}",
+                            _workFolder, 
+                            fileName,
+                            ex,
+                            _params["h"],
+                            _params["w"]);
+
+                        int height = int.Parse(_params["h"]);
+                        int width = int.Parse(_params["w"]);
+
+                        Image.FromFile(fileInfo.PhysicalPath).Resize(width, height).Save(p_ave);
+
+                        httpContext.Response.ContentType = "image/jpeg";
+                        byte[] imgdata = System.IO.File.ReadAllBytes(p_ave);
+                        httpContext.Response.Body.Write(imgdata, 0, imgdata.Length);
+                        return;
+                    }
                 }
             }
-
-            //httpContext.Response.StatusCode = 500;
-            //httpContext.Response.ContentType = "application/json";
-            //string jsonString = JsonConvert.SerializeObject(new {state =false });
-            //await httpContext.Response.WriteAsync(jsonString, Encoding.UTF8);
-            //// to stop futher pipeline execution 
-            //return;
-
-            await _next(httpContext); // calling next middleware
+            await _next(httpContext);
         }
     }
 }
