@@ -56,19 +56,20 @@ namespace ImageResizerCore
                     if(_params.Count>0) {
 #warning check on exist or return
                         string fileName = System.IO.Path.GetFileName(fileInfo.PhysicalPath).Replace(ex, string.Empty);
+
+                        int height = int.Parse(_params["h"]);
+                        int width = int.Parse(_params["w"]);
                         string p_ave = string.Format(
                             "{0}\\{1}_{3}_{4}{2}",
                             _workFolder, 
                             fileName,
                             ex,
-                            _params["h"],
-                            _params["w"]);
-
-                        int height = int.Parse(_params["h"]);
-                        int width = int.Parse(_params["w"]);
-
-                        Image.FromFile(fileInfo.PhysicalPath).Resize(width, height).Save(p_ave);
-
+                            height,
+                            width);
+                        if(!File.Exists(p_ave))
+                        {
+                            Image.FromFile(fileInfo.PhysicalPath).Resize(width, height).Save(p_ave);
+                        }
                         httpContext.Response.ContentType = "image/jpeg";
                         byte[] imgdata = System.IO.File.ReadAllBytes(p_ave);
                         httpContext.Response.Body.Write(imgdata, 0, imgdata.Length);
