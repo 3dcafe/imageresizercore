@@ -1,2 +1,3 @@
-# imageresizercore
-auto image resizer for asp.net core
+# Image Resizer Core
+
+A handy and simple image resizer for your project on asp.net core.
