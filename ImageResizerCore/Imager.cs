@@ -57,7 +57,7 @@ namespace ImageResizerCore
                             width);
                         if(!File.Exists(p_ave))
                         {
-                            Image.FromFile(fileInfo.PhysicalPath).Resize(width, height).Save(p_ave);
+                            Image.FromFile(fileInfo.PhysicalPath).ResizeImageAndRatio(width, height).Save(p_ave);
                         }
                         httpContext.Response.ContentType = "image/jpeg";
                         byte[] imgdata = System.IO.File.ReadAllBytes(p_ave);
