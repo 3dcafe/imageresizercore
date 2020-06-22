@@ -61,7 +61,7 @@ namespace ImageResizerCore
                         }
                         httpContext.Response.ContentType = "image/jpeg";
                         byte[] imgdata = System.IO.File.ReadAllBytes(p_ave);
-                        httpContext.Response.Body.Write(imgdata, 0, imgdata.Length);
+                        await httpContext.Response.Body.WriteAsync(imgdata, 0, imgdata.Length);
                         return;
                     }
                 }
