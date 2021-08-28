@@ -17,6 +17,13 @@ namespace ImageResizerCore
     }
     public class ImageResizerMiddleware
     {
+
+        private static readonly string[] suffixes = new string[] {
+            ".png",
+            ".jpg",
+            ".jpeg"
+        };
+
         const string folder = "cache";
         private readonly RequestDelegate _next;
         public ImageResizerMiddleware(RequestDelegate next)
